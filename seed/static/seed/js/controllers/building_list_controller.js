@@ -65,6 +65,10 @@ angular.module('BE.seed.controller.building_list', [])
     $scope.selected_existing_project = null;
 		$scope.reporting_period_options = reporting_periods_payload.reporting_periods;
 
+		// Toggle button to show child rows for each row
+		// (e.g. related tax lots when viewing by property)
+		$scope.show_related_rows = false;
+
     // Matching dropdown values
     var SHOW_ALL = 'Show All';
     var SHOW_MATCHED = 'Show Matched';
@@ -154,15 +158,27 @@ angular.module('BE.seed.controller.building_list', [])
     };
 	  
 		/**
-    *  Code for reporting period dropdown
+    *  Handler for reporting period dropdown
     */
     $scope.update_reporting_period_filter = function(optionValue) {
 			$scope.search.deselect_all_buildings();
 			$scope.search.reporting_period = optionValue;
       refresh_search();
-    };  
-	  
-    /**
+    };
+
+
+		/**
+		 *  Handler for related rows toggle button
+		 */
+		$scope.update_show_related_rows = function(showRelatedRows){
+			$scope.search.deselect_all_buildings();
+			$scope.search.include_related_rows = showRelatedRows;
+			refresh_search();
+		}
+
+
+
+		/**
     * LABELS CODE
     */
 

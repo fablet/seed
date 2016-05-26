@@ -55,7 +55,7 @@ angular.module('BE.seed.service.building', ['BE.seed.services.label_helper'])
         return defer.promise;
     };
 
-    building_factory.search_buildings = function(query_string, number_per_page, page_number, order_by, sort_reverse, filter_params, project_id, project_slug, view_by, reporting_period) {
+    building_factory.search_buildings = function(query_string, number_per_page, page_number, order_by, sort_reverse, filter_params, project_id, project_slug, view_by, reporting_period, include_related_rows) {
         spinner_utility.show();
         var defer = $q.defer();
         $http({
@@ -70,7 +70,8 @@ angular.module('BE.seed.service.building', ['BE.seed.services.label_helper'])
                 project_id: project_id,
                 project_slug: project_slug,
                 view_by: view_by,
-                reporting_period: reporting_period
+                reporting_period: reporting_period,
+                include_related_rows: include_related_rows
             },
             url: urls.search_buildings
         }).success(function(data, status, headers, config){

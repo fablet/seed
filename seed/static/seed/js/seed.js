@@ -300,6 +300,7 @@ SEED_app.config(['$routeProvider', function ($routeProvider) {
                     //TEMP Defaults
                     var viewBy = "properties";
                     var reportingPeriod = "2016";
+                    var includeRelatedRows = false;
 
                     // Check session storage for order, sort, and filter values.
                     if (!_.isUndefined(Storage)) {
@@ -326,10 +327,13 @@ SEED_app.config(['$routeProvider', function ($routeProvider) {
                         if (sessionStorage.getItem(prefix + ':' + 'seedBuildingReportingPeriod') !== null) {
                             reportingPeriod = JSON.parse(sessionStorage.getItem(prefix + ':' + 'seedBuildingReportingPeriod'));
                         }
+                        if (sessionStorage.getItem(prefix + ':' + 'seedBuildingIncludeRelatedRows') !== null) {
+                            includeRelatedRows = JSON.parse(sessionStorage.getItem(prefix + ':' + 'seedBuildingIncludeRelatedRows'));
+                        }
                     }
 
-                    // params: (query, number_per_page, page_number, order_by, sort_reverse, filter_params, project_id, project_slug, view_by, reporting_period)
-                    return building_services.search_buildings(q, numberPerPage, pageNumber, orderBy, sortReverse, params, null, null, viewBy, reportingPeriod);
+                    // params: (query, number_per_page, page_number, order_by, sort_reverse, filter_params, project_id, project_slug, view_by, reporting_period, includeRelatedRows)
+                    return building_services.search_buildings(q, numberPerPage, pageNumber, orderBy, sortReverse, params, null, null, viewBy, reportingPeriod, includeRelatedRows);
                 }],
                 default_columns: ['user_service', function(user_service){
                     return user_service.get_default_columns();

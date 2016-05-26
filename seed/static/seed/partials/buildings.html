@@ -111,7 +111,7 @@
     </div>
     <div class="col-md-10">
       <form class="form-inline pull-right" role="form">
-        <div style="display:inline-block; padding-right:20px;">
+        <div style="display:inline-block; padding-right:10px;">
           <label>Reporting Year:</label>
           <select   id="periodSelect"
                     class="form-control"
@@ -122,13 +122,27 @@
           </select>
         </div>
 
-        <select   id="showHideFilterSelect"
-                  class="form-control"
-                  ng-init="matching_filter_options.selected = matching_filter_options_init"
-                  ng-model="matching_filter_options.selected"
-                  ng-options="option.id as option.value for option in matching_filter_options"
-                  ng-change="update_show_matching_filter(matching_filter_options.selected)">
-        </select>
+        <div style="display:inline-block; padding-right:10px;">
+          <select   id="showHideFilterSelect"
+                    class="form-control"
+                    ng-init="matching_filter_options.selected = matching_filter_options_init"
+                    ng-model="matching_filter_options.selected"
+                    ng-options="option.id as option.value for option in matching_filter_options"
+                    ng-change="update_show_matching_filter(matching_filter_options.selected)">
+          </select>
+        </div>
+
+        <button   id="btnToggleChildRows"
+                  type="button"
+                  class="btn btn-default"
+                  ng-model="show_related_rows"
+                  uib-btn-checkbox
+                  ng-class="{'btn-primary': show_related_rows, 'btn-default': !show_related_rows}"
+                  uib-tooltip="{$ (show_related_rows) ? 'Hide related rows' : 'Show related rows' $}"
+                  ng-change="update_show_related_rows(show_related_rows)">
+          <div class="icon"><i class="fa fa-chain"></i></div>
+        </button>
+
       </form>
     </div>
   </div>

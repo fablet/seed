@@ -68,7 +68,8 @@ angular.module('BE.seed.service.search', [])
         has_checkbox: true,
         prefix: '',
         view_by: 'properties',
-        reporting_period: ''
+        reporting_period: '',
+        include_related_rows: false
     };
     search_service.next_page_disabled = (
         search_service.number_matching_search <= 10);
@@ -122,6 +123,12 @@ angular.module('BE.seed.service.search', [])
                 saas.view_by = JSON.parse(sessionStorage.getItem(prefix + ':' + 'seedBuildingViewBy'));
             }
 
+            // include_related_rows
+            if (sessionStorage.getItem(prefix + ':' + 'seedBuildingIncludeRelatedRows') !== null) {
+                saas.include_related_rows = JSON.parse(sessionStorage.getItem(prefix + ':' + 'seedBuildingIncludeRelatedRows'));
+            }
+
+
             // reporting_period
             if (sessionStorage.getItem(prefix + ':' + 'seedBuildingReportingPeriod') !== null) {
                 saas.reporting_period = JSON.parse(sessionStorage.getItem(prefix + ':' + 'seedBuildingReportingPeriod'));
@@ -173,7 +180,8 @@ angular.module('BE.seed.service.search', [])
             sort_reverse: this.sort_reverse,
             filter_params: this.filter_params,
             view_by: this.view_by,
-            reporting_period: this.reporting_period
+            reporting_period: this.reporting_period,
+            include_related_rows: this.include_related_rows
         };
     };
 
