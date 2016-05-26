@@ -58,6 +58,11 @@ urlpatterns = patterns(
         name='get_shared_fields'
     ),
     url(
+        r'^get_reporting_periods/$',
+        'get_reporting_periods',
+        name='get_reporting_periods'
+    ),
+    url(
         r'^get_cleansing_rules/$',
         'get_cleansing_rules',
         name='get_cleansing_rules'

@@ -297,6 +297,10 @@ SEED_app.config(['$routeProvider', function ($routeProvider) {
                     var numberPerPage = 10;
                     var pageNumber = 1;
 
+                    //TEMP Defaults
+                    var viewBy = "properties";
+                    var reportingPeriod = "2016";
+
                     // Check session storage for order, sort, and filter values.
                     if (!_.isUndefined(Storage)) {
 
@@ -316,16 +320,26 @@ SEED_app.config(['$routeProvider', function ($routeProvider) {
                         if (sessionStorage.getItem(prefix + ':' + 'seedBuildingPageNumber') !== null) {
                             pageNumber = JSON.parse(sessionStorage.getItem(prefix + ':' + 'seedBuildingPageNumber'));
                         }
+                        if (sessionStorage.getItem(prefix + ':' + 'seedBuildingViewBy') !== null) {
+                            viewBy = JSON.parse(sessionStorage.getItem(prefix + ':' + 'seedBuildingViewBy'));
+                        }
+                        if (sessionStorage.getItem(prefix + ':' + 'seedBuildingReportingPeriod') !== null) {
+                            reportingPeriod = JSON.parse(sessionStorage.getItem(prefix + ':' + 'seedBuildingReportingPeriod'));
+                        }
                     }
 
-                    // params: (query, number_per_page, page_number, order_by, sort_reverse, filter_params, project_id)
-                    return building_services.search_buildings(q, numberPerPage, pageNumber, orderBy, sortReverse, params, null);
+                    // params: (query, number_per_page, page_number, order_by, sort_reverse, filter_params, project_id, project_slug, view_by, reporting_period)
+                    return building_services.search_buildings(q, numberPerPage, pageNumber, orderBy, sortReverse, params, null, null, viewBy, reportingPeriod);
                 }],
                 default_columns: ['user_service', function(user_service){
                     return user_service.get_default_columns();
                 }],
                 all_columns: ['building_services', function(building_services) {
                     return building_services.get_columns();
+                }],
+                reporting_periods_payload: ['organization_service','user_service', '$route', function(organization_service, user_service, $route) {
+                    var organization_id = user_service.get_organization().id;
+                    return organization_service.get_reporting_periods(organization_id);
                 }],
                 project_payload: function() {
                     return {

@@ -18,6 +18,7 @@ angular.module('BE.seed.controller.building_list', [])
   'search_payload',
   'default_columns',
   'all_columns',
+  'reporting_periods_payload',
   'project_payload',
   'search_service',
   'label_service',
@@ -36,6 +37,7 @@ angular.module('BE.seed.controller.building_list', [])
     search_payload,
     default_columns,
     all_columns,
+		reporting_periods_payload,
     project_payload,
     search_service,
     label_service
@@ -61,11 +63,32 @@ angular.module('BE.seed.controller.building_list', [])
     $scope.create_project_error = false;
     $scope.create_project_error_message = '';
     $scope.selected_existing_project = null;
+		$scope.reporting_period_options = reporting_periods_payload.reporting_periods;
 
     // Matching dropdown values
     var SHOW_ALL = 'Show All';
     var SHOW_MATCHED = 'Show Matched';
     var SHOW_UNMATCHED = 'Show Unmatched';
+
+	  var VIEW_BY_PROPERTY = "property";
+	  var VIEW_BY_TAX_LOT = "tax_lot";
+
+	  // View state mediated by tab.
+	  // Use this flag for updating the UI when tab clicked.
+		$scope.properties_view_state = VIEW_BY_PROPERTY;
+
+		$scope.viewByProperty = function(){
+			$scope.properties_view_state = VIEW_BY_PROPERTY;
+			$scope.search.view_by = VIEW_BY_PROPERTY;
+			refresh_search();
+		}
+
+	  $scope.viewByTaxLot = function(){
+		  $scope.properties_view_state = VIEW_BY_TAX_LOT;
+		  $scope.search.view_by = VIEW_BY_TAX_LOT;
+		  refresh_search();
+	  }
+
 
     /**
     * SEARCH CODE
@@ -129,7 +152,16 @@ angular.module('BE.seed.controller.building_list', [])
         }
         $scope.do_update_buildings_filters();
     };
-
+	  
+		/**
+    *  Code for reporting period dropdown
+    */
+    $scope.update_reporting_period_filter = function(optionValue) {
+			$scope.search.deselect_all_buildings();
+			$scope.search.reporting_period = optionValue;
+      refresh_search();
+    };  
+	  
     /**
     * LABELS CODE
     */
@@ -223,6 +255,29 @@ angular.module('BE.seed.controller.building_list', [])
     /**
     * END BUILDING TABLE CODE
     */
+
+
+
+		var init_reporting_period_dropdown = function() {
+
+			if (!_.isArray($scope.reporting_period_options) || $scope.reporting_period_options.length < 1){
+				throw "At least one reporting period must be defined."
+			}
+
+			// If we don't recognize the current reporting period, just set it to null and then reinitialize it below
+			if ($scope.reporting_period_options.indexOf($scope.search.reporting_period) < 0){
+				$scope.search.reporting_period = null;
+			}
+
+			if (_.isNull($scope.search.reporting_period)){
+				//no reporting period selected, so get the most recent from all available
+				$scope.reporting_period_options_init = $scope.reporting_period_options[0].value;
+			}
+			else {
+				$scope.reporting_period_options_init = $scope.search.reporting_period;
+			}
+
+		}
 
     var init_matching_dropdown = function() {
         $scope.matching_filter_options = [
@@ -518,6 +573,7 @@ angular.module('BE.seed.controller.building_list', [])
         get_columns();
         get_labels();
         init_matching_dropdown();
+			  init_reporting_period_dropdown();
 
     };
     init();

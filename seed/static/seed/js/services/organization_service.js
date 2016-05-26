@@ -302,5 +302,27 @@ angular.module('BE.seed.service.organization', []).factory('organization_service
         return defer.promise;
     };
 
+		/** Get the reporting periods for an organization
+     *
+     * @param org_id
+     * @returns {Promise}   An array of strings, one for each
+     *                      reporting period available for this organization.
+     */
+    organization_factory.get_reporting_periods = function(org_id) {
+        var defer = $q.defer();
+        $http({
+            method: 'GET',
+            url: urls.accounts.get_reporting_periods,
+            params: {
+                organization_id: org_id
+            }
+        }).success(function(data, status, headers, config) {
+            defer.resolve(data);
+        }).error(function(data, status, headers, config) {
+            defer.reject(data, status);
+        });
+        return defer.promise;
+    }
+
     return organization_factory;
 }]);

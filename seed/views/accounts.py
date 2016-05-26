@@ -843,6 +843,41 @@ def get_shared_fields(request):
     return result
 
 
+
+
+@api_endpoint
+@ajax_request
+@login_required
+@has_perm('requires_parent_org_owner')
+def get_reporting_periods(request):
+    """
+    THIS IS TEMP PLACEHOLDER CODE !!
+
+    Returns the reporting periods for an org.
+
+    :param request:
+    :GET: Expects organization_id in the query string.
+
+    Returns::
+
+        {
+         'status': 'success',
+         'in_range_checking': An array of in-range error rules,
+         'missing_matching_field': An array of fields to verify existence,
+         'missing_values': An array of fields to ignore missing values
+        }
+    """
+    org_id = request.GET.get('organization_id')
+    org = Organization.objects.get(pk=org_id)
+    temp_reporting_periods = [{'id':'2016', 'value':'2016'}, {'id':'2015', 'value':'2015'}, {'id':'2014', 'value':'2014'}]
+    result = {
+        'status': 'success',
+        'reporting_periods': temp_reporting_periods
+    }
+
+    return result
+
+
 @api_endpoint
 @ajax_request
 @login_required

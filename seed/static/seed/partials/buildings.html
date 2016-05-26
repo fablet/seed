@@ -6,9 +6,7 @@
         <div class="page_title">
             <h1>
                 <i class="fa fa-building-o"></i>
-                {$ search.number_matching_search | number:0 $}
-                <ng-pluralize count="search.number_matching_search"
-                              when="{'one': 'Building','other': 'Buildings'}"></ng-pluralize>
+                Properties
             </h1>
         </div>
         <div class="right page_action_container page_action_btn">
@@ -19,13 +17,14 @@
 </div>
 <div class="section_nav_container">
     <div class="section_nav">
-        <a id="building-list" ng-href="#/buildings" class="active">Buildings List</a>
+        <a id="building-list" ng-href="#/buildings" class="active">List</a>
         <a id="list-settings" ng-href="#/buildings/settings">List Settings</a>
         <a id="reports" ng-href="#/buildings/reports">Reports</a>
         <a id="labels" ng-href="#/buildings/labels">Labels</a>
     </div>
 </div>
 <div class="buildingListControls">
+    <!--
     <form   name="listControlsForm" 
             class="form-inline" 
             role="form"
@@ -99,13 +98,47 @@
         </div>                     
     </form>
 </div>
+-->
 
-<div class="section_content_container" ng-cloak style="clear:both;">    
-    <div class="section_content">
-        <ng-include src="urls.static_url + 'seed/partials/buildings_table.html'">
-            <!-- buildings table loads here -->
-        </ng-include>
+<div class="section_content_container" ng-cloak style="clear:both;">
+
+  <div class="row">
+    <div class="col-md-2">
+      <uib-tabset active="active">
+        <uib-tab index="0" heading="View by Property" ng-click="viewByProperty()"></uib-tab>
+        <uib-tab index="1" heading="View by Tax Lot" ng-click="viewByTaxLot()"></uib-tab>
+      </uib-tabset>
     </div>
+    <div class="col-md-10">
+      <form class="form-inline pull-right" role="form">
+        <div style="display:inline-block; padding-right:20px;">
+          <label>Reporting Year:</label>
+          <select   id="periodSelect"
+                    class="form-control"
+                    ng-init="reporting_period_options.selected = reporting_period_options_init"
+                    ng-model="reporting_period_options.selected"
+                    ng-options="option.id as option.value for option in reporting_period_options"
+                    ng-change="update_reporting_period_filter(reporting_period_options.selected)">
+          </select>
+        </div>
+
+        <select   id="showHideFilterSelect"
+                  class="form-control"
+                  ng-init="matching_filter_options.selected = matching_filter_options_init"
+                  ng-model="matching_filter_options.selected"
+                  ng-options="option.id as option.value for option in matching_filter_options"
+                  ng-change="update_show_matching_filter(matching_filter_options.selected)">
+        </select>
+      </form>
+    </div>
+  </div>
+
+  <div class="section_content">
+      <ng-include src="urls.static_url + 'seed/partials/buildings_table.html'">
+          <!-- buildings table loads here -->
+      </ng-include>
+  </div>
+
 </div>
 
 
