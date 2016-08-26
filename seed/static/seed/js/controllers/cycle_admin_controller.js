@@ -24,6 +24,31 @@ function ($scope, $log, urls, simple_modal_service, notification, cycle_service,
         $scope.new_cycle = { from_date:'', to_date:'', name:'' };
     }
 
+    /* UI HANDLERS */
+    /* ~~~~~~~~~~~ */
+    /* Flag for selected date picker */
+    $scope.selectedDatePicker = null;
+
+    // Unfortunately we need to use four flags, one for each picker,
+    // rather than an expression in the directive's "is-open" property,
+    // since in the latter case the directive will complain
+    // that expression is non-assignable.
+    $scope.showCreateFromDatePicker = false;
+    $scope.showCreateToDatePicker = false;
+    $scope.showEditFromDatePicker = false;
+    $scope.showEditToDatePicker = false;
+
+    // These scope variables store DatePicker selections
+    $scope.createFromDate = ""
+    $scope.createToDate = ""
+    $scope.editFromDate = ""
+    $scope.editToDate = ""
+
+    // Handle datepicker open/close events
+    $scope.openDatePicker = function (datePickerFlag) {
+      $scope[datePickerFlag] = true;
+    };
+
     /*  Take user input from New Cycle form and submit
         to service to create a new cycle. */
     $scope.submitNewCycleForm = function (form){
@@ -42,6 +67,19 @@ function ($scope, $log, urls, simple_modal_service, notification, cycle_service,
                 $log.error('Error creating new cycle.', message);
             }
         );
+    };
+
+
+    $scope.$watch('createFromDate', function(newval, oldval){
+      $scope.checkInvalidCreateDates();
+    });
+
+    $scope.$watch('createToDate', function(newval, oldval){
+      $scope.checkInvalidCreateDates();
+    });
+
+    $scope.checkInvalidCreateDates = function() {
+       $scope.invalidCreateDates = ($scope.createToDate < $scope.createFromDate);
     };
 
 
@@ -73,7 +111,6 @@ function ($scope, $log, urls, simple_modal_service, notification, cycle_service,
     };
 
 
-
     $scope.saveCycle = function(cycle, id, index) {
         //Don't update $scope.cycle until a 'success' from server
         angular.extend(cycle, {id: id});
@@ -91,37 +128,7 @@ function ($scope, $log, urls, simple_modal_service, notification, cycle_service,
     };
 
 		/* A delete operation has lots of consequences that are not completely
-		   defined. Not implementing at the moment.
-
-    $scope.deleteCycle = function(cycle, index) {
-        var modalOptions = {
-            type: 'default',
-            okButtonText: 'OK',
-            cancelButtonText: 'Cancel',
-            headerText: 'Confirm delete',
-            bodyText: 'Delete cycle "' + cycle.name + '"?'
-        };
-        simple_modal_service.showModal(modalOptions).then(
-            function(result){
-                //user confirmed delete, so go ahead and do it.
-                cycle_service.delete_cycle(cycle).then(
-                    function(result){
-                        //server deleted cycle, so remove it locally
-                        $scope.cycles.splice(index, 1);
-                        var msg = 'Deleted cycle ' + getTruncatedName(cycle.name);
-                        notification.primary(msg);
-                    },
-                    function(message){
-                        $log.error('Error deleting cycle.', message);
-                    }
-                );
-            },
-            function(message){
-                //user doesn't want to delete after all.
-        });
-
-    };
-	 */
+		   defined. Not implementing at the moment. */
 
 
    function get_cycles(cycle) {
